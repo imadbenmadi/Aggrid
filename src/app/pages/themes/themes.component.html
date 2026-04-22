@@ -1,0 +1,227 @@
+<div class="container-fluid mt-4">
+  <div class="page-section">
+    <h1>Grid Themes</h1>
+    <p class="lead text-muted">
+      Customize the look and feel with AG Grid themes
+    </p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <!-- Theme Selector -->
+      <div class="controls-section">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="btn-group" role="group">
+              <button *ngFor="let theme of availableThemes" [class.active]="isThemeActive(theme.id)"
+                class="btn btn-outline-primary btn-sm" (click)="switchTheme(theme.id)">
+                {{ theme.label }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid with Dynamic Theme -->
+      <div class="example-section mt-4">
+        <div class="example-title">Theme Preview</div>
+        <div class="example-description">
+          Select a theme above to see the grid styling change instantly.
+        </div>
+        <div class="grid-wrapper">
+          <ag-grid-angular [ngClass]="currentTheme" style="height: 400px" [rowData]="rowData" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
+             rowSelection="multiple" (gridReady)="onGridReady($event)">
+          </ag-grid-angular>
+        </div>
+      </div>
+
+      <!-- Explanation -->
+      <div class="page-section">
+        <h3>Available Themes</h3>
+
+        <div class="explanation-box">
+          <h4>Light Theme</h4>
+          <p>
+            The default and most commonly used theme. Clean white background
+            with dark text. Best for office environments and general use.
+          </p>
+          <strong>CSS Class:</strong> <code>ag-theme-light</code>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Dark Theme</h4>
+          <p>
+            Dark background with light text. Easy on the eyes for low-light
+            environments. Modern appearance with high contrast.
+          </p>
+          <strong>CSS Class:</strong> <code>ag-theme-dark</code>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Balham Theme</h4>
+          <p>
+            Professional and clean design with subtle borders and spacing. Great
+            for business applications and dashboards.
+          </p>
+          <strong>CSS Class:</strong> <code>ag-theme-balham</code>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Balham Dark Theme</h4>
+          <p>
+            Dark variant of the Balham theme. Maintains the professional look
+            while providing a dark appearance.
+          </p>
+          <strong>CSS Class:</strong> <code>ag-theme-balham-dark</code>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Material Theme</h4>
+          <p>
+            Based on Google Material Design principles. Modern, flat design with
+            material colors and interactions.
+          </p>
+          <strong>CSS Class:</strong> <code>ag-theme-material</code>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Applying Themes</h4>
+          <p>Apply a theme by adding the CSS class to the grid container.</p>
+        </div>
+
+        <div class="code-box">
+          <strong>HTML:</strong>
+          <pre ngNonBindable><code>&lt;ag-grid-angular
+  class="ag-theme-light"
+  [rowData]="rowData"
+  [columnDefs]="columnDefs"
+&gt;
+&lt;/ag-grid-angular&gt;</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Switching Themes Dynamically</h4>
+          <p>Use property binding to change themes at runtime.</p>
+        </div>
+
+        <div class="code-box">
+          <strong>HTML:</strong>
+          <pre ngNonBindable><code>&lt;ag-grid-angular
+  [ngClass]="currentTheme"
+  [rowData]="rowData"
+  [columnDefs]="columnDefs"
+&gt;
+&lt;/ag-grid-angular&gt;</code></pre>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript:</strong>
+          <pre ngNonBindable><code>currentTheme: string = 'ag-theme-light';
+
+switchTheme(newTheme: string) {{
+  this.currentTheme = newTheme;
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Customizing Themes</h4>
+          <p>
+            Override theme variables with SCSS/CSS variables. Each theme exposes
+            customizable variables for colors and sizing.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>SCSS Override Example:</strong>
+          <pre ngNonBindable><code>::ng-deep .ag-theme-light {{
+  --ag-background-color: #f0f0f0;
+  --ag-border-color: #ddd;
+  --ag-cell-horizontal-padding: 12px;
+  --ag-row-height: 35px;
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Theme-Specific Features</h4>
+          <p>Each theme provides different styling for:</p>
+          <ul>
+            <li>Grid and cell backgrounds</li>
+            <li>Text colors and fonts</li>
+            <li>Header styling</li>
+            <li>Borders and dividers</li>
+            <li>Hover and selection states</li>
+            <li>Icons and controls</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Best Practices -->
+      <div class="page-section">
+        <h3>Best Practices</h3>
+        <div class="success-alert">
+          <strong>✓ Choose theme early:</strong> Decide on a theme at project
+          start for consistency.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Respect user preferences:</strong> Allow users to switch
+          between light/dark themes.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Test accessibility:</strong> Ensure sufficient contrast in
+          chosen theme.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Use CSS variables:</strong> Override theme colors
+          consistently across your app.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Load theme CSS:</strong> Include AG Grid theme CSS in your
+          main styles.
+        </div>
+      </div>
+    </div>
+
+    <!-- Side Panel -->
+    <div class="col-md-4">
+      <div class="card bg-light p-3 sticky-top" style="top: 100px">
+        <h5 class="card-title" style="color: #1976d2">Theme Quick Reference</h5>
+
+        <div class="mb-2">
+          <strong class="d-block small" style="color: #1976d2">Built-in Themes</strong>
+          <ul class="small mb-2">
+            <li>ag-theme-light</li>
+            <li>ag-theme-dark</li>
+            <li>ag-theme-balham</li>
+            <li>ag-theme-balham-dark</li>
+            <li>ag-theme-material</li>
+          </ul>
+        </div>
+
+        <hr />
+
+        <div class="mb-2">
+          <strong class="d-block small" style="color: #1976d2">CSS Variables</strong>
+          <ul class="small mb-2">
+            <li>--ag-background-color</li>
+            <li>--ag-border-color</li>
+            <li>--ag-primary-color</li>
+            <li>--ag-row-height</li>
+            <li>--ag-cell-horizontal-padding</li>
+          </ul>
+        </div>
+
+        <hr />
+
+        <div class="info-alert">
+          <strong>Tip:</strong> Combine themes with CSS variables for full
+          customization.
+        </div>
+
+        <div class="success-alert">
+          <strong>Pro Tip:</strong> Create a theme switcher in your app header
+          for user preference.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

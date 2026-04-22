@@ -1,0 +1,247 @@
+<div class="container-fluid mt-4">
+  <div class="page-section">
+    <h1>Sorting & Filtering</h1>
+    <p class="lead text-muted">Enable users to sort and filter data interactively</p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <!-- Controls -->
+      <div class="controls-section">
+        <div class="row mb-2">
+          <div class="col-md-12">
+            <strong class="d-block mb-2">Preset Filters:</strong>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <button class="btn btn-primary btn-sm w-100" (click)="filterEngineering()">Engineering Dept</button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-primary btn-sm w-100" (click)="filterHighSalary()">Salary > $80k</button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-warning btn-sm w-100" (click)="clearFilters()">Clear Filters</button>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-md-12">
+            <strong class="d-block mb-2">Preset Sorts:</strong>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <button class="btn btn-info btn-sm w-100" (click)="sortBySalaryDesc()">Salary ↓</button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-info btn-sm w-100" (click)="sortByAgeAsc()">Age ↑</button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-secondary btn-sm w-100" (click)="clearSort()">Clear Sort</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid -->
+      <div class="example-section">
+        <div class="example-title">Interactive Sorting & Filtering</div>
+        <div class="example-description">
+          Click on column headers to sort. Use the filter icon to filter. Try the preset buttons above!
+        </div>
+        <div class="grid-wrapper">
+          <ag-grid-angular class="ag-theme-alpine grid-container-tall" [rowData]="rowData" [columnDefs]="columnDefs"
+            (gridReady)="onGridReady($event)">
+          </ag-grid-angular>
+        </div>
+      </div>
+
+      <!-- Explanation -->
+      <div class="page-section">
+        <h3>Enabling Sorting</h3>
+
+        <div class="explanation-box">
+          <h4>Column Sorting</h4>
+          <p>
+            Add <code>sortable: true</code> to column definitions to enable sorting.
+            Users can click the column header to sort, and click again to reverse order.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>Example:</strong>
+          <pre ngNonBindable><code>{{
+headerName: 'Salary',
+field: 'salary',
+sortable: true
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Programmatic Sorting</h4>
+          <p>
+            Use the Column API to set sort order programmatically.
+            Pass 'asc', 'desc', or null to the setSort() method.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript:</strong>
+          <pre ngNonBindable><code>sortBySalaryDesc() {{
+  this.gridColumnApi
+    ?.getColumn('salary')
+    ?.setSort('desc');
+}}</code></pre>
+        </div>
+
+        <h3 class="mt-4">Enabling Filtering</h3>
+
+        <div class="explanation-box">
+          <h4>Filter Types</h4>
+          <p>
+            AG Grid supports several filter types. Choose based on your data type:
+          </p>
+          <ul>
+            <li><strong>agTextColumnFilter:</strong> Text/string filtering with contains, equals, etc.</li>
+            <li><strong>agNumberColumnFilter:</strong> Numeric filtering with comparisons</li>
+            <li><strong>agDateColumnFilter:</strong> Date filtering with date ranges</li>
+            <li><strong>agSetColumnFilter:</strong> Choose from distinct values (like a multi-select)</li>
+          </ul>
+        </div>
+
+        <div class="code-box">
+          <strong>Example:</strong>
+          <pre ngNonBindable><code>{{
+headerName: 'Department',
+field: 'department',
+filter: 'agSetColumnFilter'  // Shows unique values
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Programmatic Filtering</h4>
+          <p>
+            Use the Grid API to apply filters programmatically.
+            Set a filter model to apply filters without user interaction.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript:</strong>
+          <pre ngNonBindable><code>filterEngineering() {{
+  const filterModel = {{
+    department: {{
+      type: 'set',
+      values: ['Engineering']
+    }}
+  }};
+  this.gridApi?.setFilterModel(filterModel);
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Number Filter Example</h4>
+          <p>
+            For numeric filters, specify the operator and value.
+            Available operators: greaterThan, lessThan, equals, etc.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript:</strong>
+          <pre ngNonBindable><code>filterHighSalary() {{
+  const filterModel = {{
+    salary: {{
+      type: 'numberFilter',
+      operator: 'greaterThan',
+      value: 80000
+    }}
+  }};
+  this.gridApi?.setFilterModel(filterModel);
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Clearing Filters</h4>
+          <p>
+            Pass null or an empty object to clear all filters.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript:</strong>
+          <pre ngNonBindable><code>clearFilters() {{
+  this.gridApi?.setFilterModel(null);
+}}</code></pre>
+        </div>
+      </div>
+
+      <!-- Best Practices -->
+      <div class="page-section">
+        <h3>Best Practices</h3>
+        <div class="success-alert">
+          <strong>✓ Enable sorting by default:</strong> Most users expect to sort columns.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Match filter type to data:</strong> Use appropriate filters for strings, numbers, and dates.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Disable sorting for calculated columns:</strong> Set sortable: false for columns computed on the
+          fly.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Consider performance:</strong> With large datasets, server-side sorting/filtering is better.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Provide presets:</strong> Offer common filter/sort combinations for better UX.
+        </div>
+      </div>
+    </div>
+
+    <!-- Side Panel -->
+    <div class="col-md-4">
+      <div class="card bg-light p-3 sticky-top" style="top: 100px;">
+        <h5 class="card-title" style="color: #1976d2;">Sorting & Filtering</h5>
+
+        <div class="mb-3">
+          <strong class="d-block small" style="color: #1976d2;">Sorting</strong>
+          <ul class="small mb-0">
+            <li>sortable: true</li>
+            <li>setSort('asc')</li>
+            <li>setSort('desc')</li>
+            <li>setSort(null)</li>
+          </ul>
+        </div>
+
+        <div class="mb-3">
+          <strong class="d-block small" style="color: #1976d2;">Filter Types</strong>
+          <ul class="small mb-0">
+            <li>agTextColumnFilter</li>
+            <li>agNumberColumnFilter</li>
+            <li>agDateColumnFilter</li>
+            <li>agSetColumnFilter</li>
+          </ul>
+        </div>
+
+        <div class="mb-3">
+          <strong class="d-block small" style="color: #1976d2;">API Methods</strong>
+          <ul class="small mb-0">
+            <li>setFilterModel()</li>
+            <li>getFilterModel()</li>
+            <li>onFilterChanged()</li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="info-alert">
+          <strong>Tip:</strong> Click the filter icon in column headers to access filter options.
+        </div>
+
+        <div class="success-alert">
+          <strong>Pro Tip:</strong> Combine multiple filters using the filter model object with multiple properties.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

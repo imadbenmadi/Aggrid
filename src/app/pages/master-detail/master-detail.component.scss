@@ -1,0 +1,40 @@
+// Master Detail Component SCSS
+code {
+  background-color: #f5f5f5;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: "Courier New", monospace;
+  font-size: 0.9em;
+  color: #d63384;
+}
+
+pre {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 1rem;
+  overflow-x: auto;
+
+  code {
+    background-color: transparent;
+    padding: 0;
+    color: #333;
+  }
+}
+
+.badge {
+  padding: 0.35em 0.65em;
+
+  &.badge-success {
+    background-color: #28a745;
+  }
+
+  &.badge-info {
+    background-color: #17a2b8;
+  }
+
+  &.badge-warning {
+    background-color: #ffc107;
+    color: black;
+  }
+}

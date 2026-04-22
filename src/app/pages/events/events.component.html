@@ -1,0 +1,219 @@
+<div class="container-fluid mt-4">
+  <div class="page-section">
+    <h1>Grid Events & Callbacks</h1>
+    <p class="lead text-muted">React to user interactions with grid events</p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <!-- Grid -->
+      <div class="example-section">
+        <div class="example-title">Interactive Grid</div>
+        <div class="example-description">
+          Try clicking on rows, cells, sorting, and filtering. Watch the event
+          log below.
+        </div>
+        <div class="grid-wrapper">
+          <ag-grid-angular class="ag-theme-alpine grid-container" [rowData]="rowData" [columnDefs]="columnDefs"
+            rowSelection="multiple" [defaultColDef]="defaultColDef" (gridReady)="onGridReady($event)"
+            (rowClicked)="onRowClicked($event)" (cellClicked)="onCellClicked($event)"
+            (cellDoubleClicked)="onCellDoubleClicked($event)" (selectionChanged)="onSelectionChanged($event)"
+            (sortChanged)="onSortChanged($event)" (filterChanged)="onFilterChanged($event)"
+            (firstDataRendered)="onFirstDataRendered($event)">
+          </ag-grid-angular>
+        </div>
+      </div>
+
+      <!-- Event Log -->
+      <div class="example-section mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div class="example-title">Event Log</div>
+          <button class="btn btn-sm btn-secondary" (click)="clearLog()">
+            Clear Log
+          </button>
+        </div>
+        <div style="
+            background-color: #1a1a1a;
+            color: #00ff00;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            font-family: &quot;Courier New&quot;, monospace;
+            font-size: 0.875rem;
+            height: 200px;
+            overflow-y: auto;
+          ">
+          <div *ngFor="let log of eventLog" style="line-height: 1.6">
+            {{ log }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Explanation -->
+      <div class="page-section">
+        <h3>Common Grid Events</h3>
+
+        <div class="explanation-box">
+          <h4>Grid Lifecycle Events</h4>
+          <ul>
+            <li><strong>gridReady:</strong> Fired when grid is initialized</li>
+            <li>
+              <strong>firstDataRendered:</strong> Fired when first set of rows
+              rendered
+            </li>
+          </ul>
+        </div>
+
+        <div class="code-box">
+          <strong>Example:</strong>
+          <pre ngNonBindable><code>(gridReady)="onGridReady($event)"
+(firstDataRendered)="onFirstDataRendered($event)"</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Row Events</h4>
+          <ul>
+            <li><strong>rowClicked:</strong> When a row is clicked</li>
+            <li>
+              <strong>rowDoubleClicked:</strong> When a row is double-clicked
+            </li>
+            <li><strong>selectionChanged:</strong> When selection changes</li>
+          </ul>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript:</strong>
+          <pre ngNonBindable><code>onRowClicked(event: any) {{
+  console.log('Clicked row:', event.data);
+  console.log('Clicked column:', event.colDef?.headerName);
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Cell Events</h4>
+          <ul>
+            <li><strong>cellClicked:</strong> When a cell is clicked</li>
+            <li>
+              <strong>cellDoubleClicked:</strong> When a cell is double-clicked
+            </li>
+            <li>
+              <strong>cellValueChanged:</strong> When a cell value is edited
+            </li>
+            <li><strong>cellEditingStarted:</strong> When editing starts</li>
+            <li><strong>cellEditingStopped:</strong> When editing ends</li>
+          </ul>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript:</strong>
+          <pre ngNonBindable><code>onCellClicked(event: any) {{
+  console.log('Cell value:', event.value);
+  console.log('Column:', event.colDef?.field);
+  console.log('Row index:', event.rowIndex);
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Data Events</h4>
+          <ul>
+            <li><strong>sortChanged:</strong> When sorting changes</li>
+            <li><strong>filterChanged:</strong> When filtering changes</li>
+            <li><strong>paginationChanged:</strong> When pagination changes</li>
+          </ul>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript:</strong>
+          <pre ngNonBindable><code>onSortChanged(event: any) {{
+  const state = this.gridColumnApi?.getColumnState();
+  console.log('Current sort:', state?.filter(col => col.sort));
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Getting Event Parameters</h4>
+          <p>
+            Each event provides detailed information about what triggered it.
+            Common properties: data, colDef, rowIndex, value, api, columnApi.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript:</strong>
+          <pre ngNonBindable><code>onRowClicked(event: any) {{
+  event.data;           // Row object
+  event.colDef;         // Column definition
+  event.rowIndex;       // Row number
+  event.api;            // Grid API
+  event.columnApi;      // Column API
+}}</code></pre>
+        </div>
+      </div>
+
+      <!-- Best Practices -->
+      <div class="page-section">
+        <h3>Best Practices</h3>
+        <div class="success-alert">
+          <strong>✓ Use gridReady for initialization:</strong> Always initialize
+          grid state in gridReady handler.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Cache grid references:</strong> Store gridApi and columnApi
+          for later use.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Handle events efficiently:</strong> Avoid heavy computations
+          in event handlers.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Update UI based on events:</strong> React to user
+          interactions to show/hide controls.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Log important events:</strong> Maintain audit trails for
+          data modifications.
+        </div>
+      </div>
+    </div>
+
+    <!-- Side Panel -->
+    <div class="col-md-4">
+      <div class="card bg-light p-3 sticky-top" style="top: 100px">
+        <h5 class="card-title" style="color: #1976d2">Common Events</h5>
+
+        <div class="mb-2">
+          <strong class="d-block small" style="color: #1976d2">Lifecycle</strong>
+          <ul class="small mb-2">
+            <li>gridReady</li>
+            <li>firstDataRendered</li>
+          </ul>
+        </div>
+
+        <div class="mb-2">
+          <strong class="d-block small" style="color: #1976d2">Row/Cell</strong>
+          <ul class="small mb-2">
+            <li>rowClicked</li>
+            <li>cellClicked</li>
+            <li>cellValueChanged</li>
+            <li>selectionChanged</li>
+          </ul>
+        </div>
+
+        <div class="mb-2">
+          <strong class="d-block small" style="color: #1976d2">Data Changes</strong>
+          <ul class="small mb-2">
+            <li>sortChanged</li>
+            <li>filterChanged</li>
+            <li>paginationChanged</li>
+          </ul>
+        </div>
+
+        <hr />
+
+        <div class="info-alert">
+          <strong>Tip:</strong> Event handlers receive detailed information
+          about what changed.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

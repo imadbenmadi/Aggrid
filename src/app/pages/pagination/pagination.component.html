@@ -1,0 +1,197 @@
+<div class="container-fluid mt-4">
+  <div class="page-section">
+    <h1>Pagination</h1>
+    <p class="lead text-muted">Handle large datasets efficiently with client-side pagination</p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <!-- Controls -->
+      <div class="controls-section">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="control-group">
+              <label>Rows per Page</label>
+              <input type="number" [(ngModel)]="pageSize" min="5" max="100" (change)="updatePageSize()">
+            </div>
+          </div>
+          <div class="col-md-8">
+            <label class="d-block mb-2">&nbsp;</label>
+            <button class="btn btn-primary btn-sm" (click)="firstPage()">First</button>
+            <button class="btn btn-primary btn-sm ms-2" (click)="previousPage()">Previous</button>
+            <button class="btn btn-primary btn-sm ms-2" (click)="nextPage()">Next</button>
+            <button class="btn btn-primary btn-sm ms-2" (click)="lastPage()">Last</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid -->
+      <div class="example-section">
+        <div class="example-title">Paginated Grid</div>
+        <div class="example-description">
+          Large dataset with 100 rows. Use pagination controls to navigate pages efficiently.
+        </div>
+        <div class="grid-wrapper">
+          <ag-grid-angular class="ag-theme-alpine grid-container" [rowData]="rowData" [columnDefs]="columnDefs"
+            [pagination]="true" [paginationPageSize]="pageSize" (gridReady)="onGridReady($event)">
+          </ag-grid-angular>
+        </div>
+      </div>
+
+      <!-- Explanation -->
+      <div class="page-section">
+        <h3>Pagination Concepts</h3>
+
+        <div class="explanation-box">
+          <h4>Enabling Pagination</h4>
+          <p>
+            Set <code>pagination: true</code> in grid properties to enable pagination.
+            Set <code>paginationPageSize</code> to control rows per page.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>HTML Template:</strong>
+          <pre ngNonBindable><code>&lt;ag-grid-angular
+  [pagination]="true"
+  [paginationPageSize]="pageSize"
+  ...
+&gt;
+&lt;/ag-grid-angular&gt;</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Dynamic Page Size</h4>
+          <p>
+            Allow users to change the page size on the fly.
+            The grid will automatically recalculate pagination.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript:</strong>
+          <pre ngNonBindable><code>updatePageSize() {{
+  this.gridApi?.paginationSetPageSize(
+    parseInt(this.pageSize.toString())
+  );
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Navigation Methods</h4>
+          <p>
+            Use pagination API methods to navigate programmatically.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript:</strong>
+          <pre ngNonBindable><code>nextPage() {{
+  this.gridApi?.paginationGoToNextPage();
+}}
+
+previousPage() {{
+  this.gridApi?.paginationGoToPreviousPage();
+}}
+
+goToPage(pageNumber: number) {{
+  this.gridApi?.paginationGoToPage(pageNumber);
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Pagination vs Virtual Scrolling</h4>
+          <p>
+            <strong>Pagination:</strong> Display one page at a time. Good for large datasets and mobile devices.
+            <br>
+            <strong>Virtual Scrolling:</strong> Continuous scrolling through all data. Good for smaller datasets with
+            instant access.
+          </p>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Client-side vs Server-side Pagination</h4>
+          <p>
+            <strong>Client-side:</strong> All data loaded at once, pagination handled in the browser. Fast but uses more
+            memory.
+            <br>
+            <strong>Server-side:</strong> Load pages on demand from the server. Better for massive datasets with limited
+            bandwidth.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>Server-side Pagination Example:</strong>
+          <pre ngNonBindable><code>// Load only current page from server
+loadPage(page: number) {{
+  this.apiService.getUsers(page, this.pageSize)
+    .subscribe(data => {{
+      this.rowData = data;
+      this.gridApi?.paginationGoToPage(page);
+    }});
+}}</code></pre>
+        </div>
+      </div>
+
+      <!-- Best Practices -->
+      <div class="page-section">
+        <h3>Best Practices</h3>
+        <div class="success-alert">
+          <strong>✓ Use pagination for large datasets:</strong> Keep page sizes reasonable (10-50 rows).
+        </div>
+        <div class="success-alert">
+          <strong>✓ Implement server-side pagination:</strong> For very large datasets, load pages from the server.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Show row count:</strong> Display total rows to help users understand data scope.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Provide page size options:</strong> Let users choose how many rows per page.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Remember user preferences:</strong> Store page size in localStorage for better UX.
+        </div>
+      </div>
+    </div>
+
+    <!-- Side Panel -->
+    <div class="col-md-4">
+      <div class="card bg-light p-3 sticky-top" style="top: 100px;">
+        <h5 class="card-title" style="color: #1976d2;">Pagination API</h5>
+
+        <div class="mb-2">
+          <strong class="d-block small" style="color: #1976d2;">Properties</strong>
+          <ul class="small mb-2">
+            <li>pagination: true</li>
+            <li>paginationPageSize</li>
+            <li>paginationAutoPageSize</li>
+          </ul>
+        </div>
+
+        <div class="mb-2">
+          <strong class="d-block small" style="color: #1976d2;">Methods</strong>
+          <ul class="small mb-2">
+            <li>paginationGoToPage()</li>
+            <li>paginationGoToNextPage()</li>
+            <li>paginationGoToPreviousPage()</li>
+            <li>paginationSetPageSize()</li>
+            <li>paginationGetCurrentPage()</li>
+            <li>paginationGetPageSize()</li>
+            <li>paginationGetTotalPages()</li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="info-alert">
+          <strong>Tip:</strong> Combine pagination with sorting and filtering for better UX.
+        </div>
+
+        <div class="success-alert">
+          <strong>Pro Tip:</strong> For optimal performance with large datasets, implement server-side pagination that
+          loads pages on demand.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

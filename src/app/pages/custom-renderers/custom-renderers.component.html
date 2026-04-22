@@ -1,0 +1,208 @@
+<div class="container-fluid mt-4">
+  <div class="page-section">
+    <h1>Custom Cell Renderers</h1>
+    <p class="lead text-muted">Create custom components for specialized cell rendering</p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <!-- Grid -->
+      <div class="example-section">
+        <div class="example-title">Custom Renderers in Action</div>
+        <div class="example-description">
+          Profile column shows custom avatar initials. Status column uses colored badges. Actions column has clickable
+          buttons.
+        </div>
+        <div class="grid-wrapper">
+          <ag-grid-angular class="ag-theme-alpine grid-container" [rowData]="rowData" [columnDefs]="columnDefs"
+            (gridReady)="onGridReady($event)">
+          </ag-grid-angular>
+        </div>
+      </div>
+
+      <!-- Explanation -->
+      <div class="page-section">
+        <h3>Custom Renderer Concepts</h3>
+
+        <div class="explanation-box">
+          <h4>Creating a Custom Renderer</h4>
+          <p>
+            A cell renderer is an Angular component with parameters property for cell data.
+            Implement the method <code>agInit(params)</code> to receive cell data.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>Renderer Component (profile-picture-renderer.component.ts):</strong>
+          <pre ngNonBindable><code>import {{ Component }} from '@angular/core';
+
+@Component({{
+  selector: 'app-profile-picture-renderer',
+  template: `&lt;div class="profile-avatar"&gt;
+    {{ params.value?.substring(0, 2).toUpperCase() }}
+  &lt;/div&gt;`,
+  styles: [`...`]
+}})
+export class ProfilePictureRendererComponent {{
+  params: any;
+
+  agInit(params: any) {{
+    this.params = params;
+  }}
+
+  refresh() {{
+    return true;
+  }}
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Registering in Column Definition</h4>
+          <p>
+            Add the renderer component to <code>cellRenderer</code> property.
+            The grid will instantiate and pass cell data automatically.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>Column Definition:</strong>
+          <pre ngNonBindable><code>{{
+  headerName: 'Profile',
+  field: 'profile',
+  cellRenderer: ProfilePictureRendererComponent
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Accessing Cell Data</h4>
+          <p>
+            The <code>params</code> object contains all cell information.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>Available Properties:</strong>
+          <pre ngNonBindable><code>params.value           // Cell value
+params.data            // Row data object
+params.rowIndex        // Row number
+params.colDef          // Column definition
+params.api             // Grid API
+params.columnApi       // Column API</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Status Renderer Example</h4>
+          <p>
+            Render conditional badges based on cell value.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>Status Renderer Template:</strong>
+          <pre ngNonBindable><code>&lt;span [ngClass]="{
+  'badge-success': status === 'Active',
+  'badge-danger': status === 'Inactive',
+  'badge-warning': status === 'Pending'
+}"&gt;
+  {{ status }}
+&lt;/span&gt;</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Action Buttons Renderer</h4>
+          <p>
+            Create interactive buttons within cells. Emit events to parent component.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>Actions Renderer Template:</strong>
+          <pre ngNonBindable><code>&lt;button class="btn btn-sm btn-primary" (click)="onEdit()"&gt;
+  Edit
+&lt;/button&gt;
+&lt;button class="btn btn-sm btn-danger" (click)="onDelete()"&gt;
+  Delete
+&lt;/button&gt;</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Refresh Method</h4>
+          <p>
+            Implement <code>refresh()</code> method to update renderer when cell data changes.
+            Return <code>true</code> to trigger re-render.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript:</strong>
+          <pre ngNonBindable><code>refresh(): boolean {{
+  // Update component state based on new params
+  return true; // Renderer will update
+}}</code></pre>
+        </div>
+      </div>
+
+      <!-- Best Practices -->
+      <div class="page-section">
+        <h3>Best Practices</h3>
+        <div class="success-alert">
+          <strong>✓ Keep renderers simple:</strong> Complex components impact performance.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Declare in module:</strong> Add to declarations and entryComponents for AOT.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Implement refresh():</strong> Handle data updates efficiently.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Use for presentation only:</strong> Don't store component state.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Test in isolation:</strong> Renderers should work independently.
+        </div>
+      </div>
+    </div>
+
+    <!-- Side Panel -->
+    <div class="col-md-4">
+      <div class="card bg-light p-3 sticky-top" style="top: 100px;">
+        <h5 class="card-title" style="color: #1976d2;">Renderer Types</h5>
+
+        <div class="mb-3">
+          <strong class="text-primary d-block">Component Renderer</strong>
+          <p class="small text-muted mb-0">Full Angular component with lifecycle</p>
+        </div>
+
+        <div class="mb-3">
+          <strong class="text-primary d-block">Function Renderer</strong>
+          <p class="small text-muted mb-0">Simple function returning HTML</p>
+        </div>
+
+        <div class="mb-3">
+          <strong class="text-primary d-block">Framework Renderer</strong>
+          <p class="small text-muted mb-0">Rendered by AG Grid framework</p>
+        </div>
+
+        <hr>
+
+        <div class="mb-2">
+          <strong class="d-block small" style="color: #1976d2;">Common Use Cases</strong>
+          <ul class="small mb-0">
+            <li>Profile avatars</li>
+            <li>Status badges</li>
+            <li>Action buttons</li>
+            <li>Progress bars</li>
+            <li>Charts/sparklines</li>
+            <li>Links/routing</li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="info-alert">
+          <strong>Tip:</strong> Share renderer components across pages for consistency.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

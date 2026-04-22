@@ -1,0 +1,211 @@
+<div class="container-fluid mt-4">
+  <div class="page-section">
+    <h1>Data Grouping</h1>
+    <p class="lead text-muted">Organize and summarize data by grouping rows</p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <!-- Controls -->
+      <div class="controls-section">
+        <div class="row">
+          <div class="col-md-3">
+            <button class="btn btn-primary btn-sm" (click)="groupByDept()">
+              Group by Dept
+            </button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-secondary btn-sm" (click)="clearGrouping()">
+              Clear Grouping
+            </button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-info btn-sm" (click)="expandAll()">
+              Expand All
+            </button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-info btn-sm" (click)="collapseAll()">
+              Collapse All
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid -->
+      <div class="example-section">
+        <div class="example-title">Grouped Data</div>
+        <div class="example-description">
+          Data is grouped by Department. Expand groups to see individual
+          records. Note: Salary is summed for each group.
+        </div>
+        <div class="grid-wrapper">
+          <ag-grid-angular class="ag-theme-alpine grid-container-tall" [rowData]="rowData" [columnDefs]="columnDefs"
+            [groupDisplayType]="'singleColumn'" (gridReady)="onGridReady($event)">
+          </ag-grid-angular>
+        </div>
+      </div>
+
+      <!-- Explanation -->
+      <div class="page-section">
+        <h3>Grouping Concepts</h3>
+
+        <div class="explanation-box">
+          <h4>Setting Up Grouping</h4>
+          <p>
+            Add <code>rowGroup: true</code> to a column definition to group by
+            that column. The grouped column is typically hidden with
+            <code>hide: true</code>.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>Example:</strong>
+          <pre ngNonBindable><code>{{
+headerName: 'Department',
+field: 'department',
+rowGroup: true,
+hide: true
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Aggregation Functions</h4>
+          <p>
+            Use <code>aggFunc</code> to summarize numeric columns within groups.
+            Common functions: sum, count, min, max, avg.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>Example:</strong>
+          <pre ngNonBindable><code>{{
+headerName: 'Salary',
+field: 'salary',
+aggFunc: 'sum'
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Multiple Grouping Levels</h4>
+          <p>
+            Add multiple columns with <code>rowGroup: true</code> to create
+            hierarchical grouping.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>Example:</strong>
+          <pre ngNonBindable><code>columnDefs = [
+  {{ field: 'department', rowGroup: true, hide: true }},
+  {{ field: 'team', rowGroup: true, hide: true }},
+  {{ field: 'name' }}
+];</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Programmatic Grouping</h4>
+          <p>Change grouping dynamically using the Column API.</p>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript:</strong>
+          <pre ngNonBindable><code>groupByDept() {{
+  this.gridColumnApi?.setRowGroupColumns(['department']);
+}}
+
+clearGrouping() {{
+  this.gridColumnApi?.setRowGroupColumns([]);
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Expand/Collapse Groups</h4>
+          <p>
+            Users can click the expand arrow. You can also expand/collapse
+            programmatically.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript:</strong>
+          <pre ngNonBindable><code>expandAll() {{
+  this.gridApi?.expandAll();
+}}
+
+collapseAll() {{
+  this.gridApi?.collapseAll();
+}}</code></pre>
+        </div>
+      </div>
+
+      <!-- Best Practices -->
+      <div class="page-section">
+        <h3>Best Practices</h3>
+        <div class="success-alert">
+          <strong>✓ Use grouping for summaries:</strong> Group by categorical
+          columns, aggregate numerics.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Limit grouping depth:</strong> Too many levels make data
+          hard to navigate.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Provide expand/collapse options:</strong> Let users control
+          group visibility.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Show aggregations clearly:</strong> Label aggregated values
+          distinctly.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Hide grouping columns:</strong> Set hide: true for columns
+          used only for grouping.
+        </div>
+      </div>
+    </div>
+
+    <!-- Side Panel -->
+    <div class="col-md-4">
+      <div class="card bg-light p-3 sticky-top" style="top: 100px">
+        <h5 class="card-title" style="color: #1976d2">Grouping Properties</h5>
+
+        <div class="mb-3">
+          <strong class="text-primary">rowGroup</strong>
+          <p class="small text-muted mb-0">Enable grouping by this column</p>
+        </div>
+
+        <div class="mb-3">
+          <strong class="text-primary">hide</strong>
+          <p class="small text-muted mb-0">Hide the grouping column</p>
+        </div>
+
+        <div class="mb-3">
+          <strong class="text-primary">aggFunc</strong>
+          <p class="small text-muted mb-0">
+            Aggregation function (sum, avg, min, max, count)
+          </p>
+        </div>
+
+        <hr />
+
+        <div class="mb-2">
+          <strong class="d-block small" style="color: #1976d2">API Methods</strong>
+          <ul class="small mb-0">
+            <li>setRowGroupColumns()</li>
+            <li>expandAll()</li>
+            <li>collapseAll()</li>
+            <li>getRowGroupColumn()</li>
+          </ul>
+        </div>
+
+        <hr />
+
+        <div class="info-alert">
+          <strong>Tip:</strong> Grouping automatically hides detail rows. Great
+          for data exploration.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

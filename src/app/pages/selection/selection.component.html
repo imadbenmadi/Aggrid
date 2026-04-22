@@ -1,0 +1,212 @@
+<div class="container-fluid mt-4">
+  <div class="page-section">
+    <h1>Row Selection</h1>
+    <p class="lead text-muted">
+      Select and manage multiple rows with checkboxes
+    </p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <!-- Controls -->
+      <div class="controls-section">
+        <div class="row">
+          <div class="col-md-3">
+            <button class="btn btn-primary btn-sm" (click)="selectAll()">
+              Select All
+            </button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-secondary btn-sm" (click)="deselectAll()">
+              Deselect All
+            </button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-danger btn-sm" (click)="deleteSelected()">
+              Delete Selected
+            </button>
+          </div>
+          <div class="col-md-3">
+            <p class="small text-muted mb-0">
+              {{ getSelectedCount() }} selected
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="example-section" *ngIf="getSelectedCount() > 0">
+        <div class="example-title">Selection Summary</div>
+        <div class="row">
+          <div class="col-md-6">
+            <strong>Selected Rows:</strong> {{ getSelectedCount() }}
+          </div>
+          <div class="col-md-6">
+            <strong>Total Salary:</strong> ${{
+            getTotalSalary() | number: "1.0-0"
+            }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid -->
+      <div class="example-section">
+        <div class="example-title">Selectable Grid</div>
+        <div class="example-description">
+          Check the boxes to select rows. Use the buttons above to manage
+          selections.
+        </div>
+        <div class="grid-wrapper">
+          <ag-grid-angular class="ag-theme-alpine grid-container" [rowData]="rowData" [columnDefs]="columnDefs"
+            (gridReady)="onGridReady($event)" (selectionChanged)="onSelectionChanged()">
+          </ag-grid-angular>
+        </div>
+      </div>
+
+      <!-- Explanation -->
+      <div class="page-section">
+        <h3>Selection Types</h3>
+
+        <div class="explanation-box">
+          <h4>Checkbox Selection</h4>
+          <p>
+            Add a column with <code>checkboxSelection: true</code> to enable
+            checkboxes. Set <code>headerCheckboxSelection: true</code> to
+            include a select-all checkbox.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>Example:</strong>
+          <pre ngNonBindable><code>{{
+headerName: 'Select',
+field: 'select',
+checkboxSelection: true,
+headerCheckboxSelection: true,
+width: 80
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Getting Selected Rows</h4>
+          <p>
+            Use <code>getSelectedRows()</code> to retrieve all selected row
+            data. Also use the <code>selectionChanged</code> event to react when
+            selection changes.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript:</strong>
+          <pre ngNonBindable><code>onSelectionChanged() {{
+  this.selectedRows = this.gridApi?.getSelectedRows();
+  console.log(this.selectedRows);
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Selecting/Deselecting Programmatically</h4>
+          <p>Use the Grid API methods to control selection programmatically.</p>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript:</strong>
+          <pre ngNonBindable><code>selectAll() {{
+  this.gridApi?.selectAll();
+}}
+
+deselectAll() {{
+  this.gridApi?.deselectAll();
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Row Click Selection</h4>
+          <p>
+            Set <code>rowSelection: 'single'</code> or
+            <code>'multiple'</code> to enable selection by clicking the entire
+            row.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>HTML:</strong>
+          <pre ngNonBindable><code>&lt;ag-grid-angular
+  rowSelection="multiple"
+  (selectionChanged)="onSelectionChanged()"
+  ...
+&gt;
+&lt;/ag-grid-angular&gt;</code></pre>
+        </div>
+      </div>
+
+      <!-- Best Practices -->
+      <div class="page-section">
+        <h3>Best Practices</h3>
+        <div class="success-alert">
+          <strong>✓ Use checkboxes for clarity:</strong> Checkboxes make
+          selection intent obvious.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Show selection count:</strong> Display how many rows are
+          selected.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Provide bulk actions:</strong> Enable actions on selected
+          rows (delete, export, etc.).
+        </div>
+        <div class="success-alert">
+          <strong>✓ Show summary data:</strong> Calculate totals or summaries
+          from selected rows.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Confirm destructive actions:</strong> Ask for confirmation
+          before deleting selected rows.
+        </div>
+      </div>
+    </div>
+
+    <!-- Side Panel -->
+    <div class="col-md-4">
+      <div class="card bg-light p-3 sticky-top" style="top: 100px">
+        <h5 class="card-title" style="color: #1976d2">Selection Options</h5>
+
+        <div class="mb-3">
+          <strong class="text-primary">Checkbox Column</strong>
+          <p class="small text-muted mb-0">checkboxSelection: true</p>
+        </div>
+
+        <div class="mb-3">
+          <strong class="text-primary">Header Checkbox</strong>
+          <p class="small text-muted mb-0">headerCheckboxSelection: true</p>
+        </div>
+
+        <div class="mb-3">
+          <strong class="text-primary">Row Selection</strong>
+          <p class="small text-muted mb-0">
+            rowSelection: 'single' or 'multiple'
+          </p>
+        </div>
+
+        <hr />
+
+        <div class="mb-2">
+          <strong class="d-block small" style="color: #1976d2">API Methods</strong>
+          <ul class="small mb-0">
+            <li>getSelectedRows()</li>
+            <li>selectAll()</li>
+            <li>deselectAll()</li>
+            <li>getSelectedNodes()</li>
+          </ul>
+        </div>
+
+        <hr />
+
+        <div class="info-alert">
+          <strong>Tip:</strong> Use selectionChanged event to update UI based on
+          selected rows.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

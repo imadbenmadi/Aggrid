@@ -1,0 +1,189 @@
+<div class="container-fluid mt-4">
+  <div class="page-section">
+    <h1>Basic Grid Setup</h1>
+    <p class="lead text-muted">
+      Learn how to set up your first AG Grid with data
+    </p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <!-- Grid Section -->
+      <div class="example-section">
+        <div class="example-title">AG Grid Basic Example</div>
+        <div class="example-description">
+          This is a simple AG Grid displaying employee data with basic column
+          definitions.
+        </div>
+        <div class="grid-wrapper">
+          <ag-grid-angular class="ag-theme-alpine grid-container" [rowData]="rowData" [columnDefs]="columnDefs"
+            (gridReady)="onGridReady($event)">
+          </ag-grid-angular>
+        </div>
+      </div>
+
+      <!-- Explanation -->
+      <div class="page-section">
+        <h3>What's Happening Here?</h3>
+        <div class="explanation-box">
+          <h4>Column Definitions</h4>
+          <p>
+            The <code>columnDefs</code> array defines what columns should appear
+            in the grid. Each object in the array specifies a column with
+            properties like <code>headerName</code>, <code>field</code>, and
+            <code>width</code>.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript Code:</strong>
+          <pre ngNonBindable><code>columnDefs = [
+  {{ headerName: 'Name', field: 'name', width: 150 }},
+  {{ headerName: 'Age', field: 'age', width: 100 }},
+  {{ headerName: 'Country', field: 'country', width: 150 }}
+];</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Row Data</h4>
+          <p>
+            The <code>rowData</code> array contains your actual data. Each
+            object in the array represents one row. The
+            <code>field</code> property in columnDefs tells AG Grid which
+            property from the data object to display in that column.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript Code:</strong>
+          <pre ngNonBindable><code>rowData = [
+  {{ name: 'Alice', age: 28, country: 'USA' }},
+  {{ name: 'Bob', age: 35, country: 'Canada' }},
+  // ...
+];</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>HTML Template</h4>
+          <p>
+            In the template, use the
+            <code>&lt;ag-grid-angular&gt;</code> component. The
+            <code>[rowData]</code> and <code>[columnDefs]</code> are property
+            bindings. The <code>(gridReady)</code> event fires when the grid is
+            initialized, allowing you to access the grid API for programmatic
+            control.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>HTML Template:</strong>
+          <pre ngNonBindable><code>&lt;ag-grid-angular
+  class="ag-theme-light grid-container"
+  [rowData]="rowData"
+  [columnDefs]="columnDefs"
+  (gridReady)="onGridReady($event)"&gt;
+&lt;/ag-grid-angular&gt;</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Grid API</h4>
+          <p>
+            When <code>gridReady</code> fires, you receive the grid API and
+            column API. These objects provide methods to control the grid
+            programmatically, such as sorting, filtering, updating data, and
+            more.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript Code:</strong>
+          <pre ngNonBindable><code>onGridReady(params: any) {{
+  this.gridApi = params.api;
+  this.gridColumnApi = params.columnApi;
+  // Now you can use gridApi methods
+}}</code></pre>
+        </div>
+      </div>
+
+      <!-- Best Practices -->
+      <div class="page-section">
+        <h3>Best Practices</h3>
+        <div class="success-alert">
+          <strong>✓ Always set container height:</strong> Use CSS to set a fixed
+          or percentage height on the grid container.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Use unique field names:</strong> Ensure your data object
+          properties match the field names in columnDefs.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Define column widths:</strong> Specify column widths to
+          ensure consistent layout.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Theme class required:</strong> Always add a theme class like
+          <code>ag-theme-light</code> to the grid.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Store grid reference:</strong> Keep references to gridApi
+          and gridColumnApi for later use.
+        </div>
+      </div>
+    </div>
+
+    <!-- Side Panel -->
+    <div class="col-md-4">
+      <div class="card bg-light p-3 sticky-top" style="top: 100px">
+        <h5 class="card-title" style="color: #1976d2">Key Concepts</h5>
+
+        <div class="mb-3">
+          <strong class="text-primary">Column Definition</strong>
+          <p class="small text-muted mb-0">
+            Object that defines how a column should look and behave
+          </p>
+        </div>
+
+        <div class="mb-3">
+          <strong class="text-primary">Row Data</strong>
+          <p class="small text-muted mb-0">
+            Array of objects representing the rows to display
+          </p>
+        </div>
+
+        <div class="mb-3">
+          <strong class="text-primary">Grid API</strong>
+          <p class="small text-muted mb-0">
+            Methods to programmatically control the grid
+          </p>
+        </div>
+
+        <div class="mb-3">
+          <strong class="text-primary">Column API</strong>
+          <p class="small text-muted mb-0">
+            Methods to manage columns and their properties
+          </p>
+        </div>
+
+        <div class="mb-3">
+          <strong class="text-primary">Grid Ready Event</strong>
+          <p class="small text-muted mb-0">
+            Fired when grid is initialized and ready to use
+          </p>
+        </div>
+
+        <hr />
+
+        <h6 class="mt-3 mb-2">Common Properties</h6>
+        <ul class="small mb-0">
+          <li><code>headerName</code> - Column header text</li>
+          <li><code>field</code> - Data property name</li>
+          <li><code>width</code> - Column width in pixels</li>
+          <li><code>hide</code> - Hide/show column</li>
+          <li><code>sortable</code> - Enable sorting</li>
+          <li><code>filter</code> - Enable filtering</li>
+          <li><code>resizable</code> - Allow column resize</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

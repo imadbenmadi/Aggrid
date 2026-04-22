@@ -1,0 +1,191 @@
+<div class="container-fluid mt-4">
+  <div class="page-section">
+    <h1>Cell Editing</h1>
+    <p class="lead text-muted">Enable inline editing for grid cells</p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <!-- Controls -->
+      <div class="controls-section">
+        <div class="row">
+          <div class="col-md-4">
+            <button class="btn btn-primary btn-sm" (click)="startEditing()">Start Editing</button>
+          </div>
+          <div class="col-md-4">
+            <button class="btn btn-secondary btn-sm" (click)="stopEditing()">Stop Editing</button>
+          </div>
+          <div class="col-md-4">
+            <p class="small text-muted mb-0">Click cells to edit</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid -->
+      <div class="example-section">
+        <div class="example-title">Editable Grid</div>
+        <div class="example-description">
+          Click on any cell to edit. Text fields for names, dropdowns for department/status.
+        </div>
+        <div class="grid-wrapper">
+          <ag-grid-angular class="ag-theme-alpine grid-container" [rowData]="rowData" [columnDefs]="columnDefs"
+            editType="fullRow" (gridReady)="onGridReady($event)" (cellValueChanged)="onCellValueChanged($event)">
+          </ag-grid-angular>
+        </div>
+      </div>
+
+      <!-- Explanation -->
+      <div class="page-section">
+        <h3>Cell Editing Concepts</h3>
+
+        <div class="explanation-box">
+          <h4>Enabling Cell Editing</h4>
+          <p>
+            Set <code>editable: true</code> on a column to allow editing.
+            The default editor is a text input. Double-click or press Enter to edit.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>Example:</strong>
+          <pre ngNonBindable><code>{{
+headerName: 'Name',
+field: 'name',
+editable: true
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Cell Editors</h4>
+          <p>
+            Use different cell editors for different data types:
+          </p>
+          <ul>
+            <li><strong>agTextCellEditor:</strong> Text input (default)</li>
+            <li><strong>agSelectCellEditor:</strong> Dropdown selection</li>
+            <li><strong>agRichSelectCellEditor:</strong> Rich select dropdown</li>
+            <li><strong>agNumberCellEditor:</strong> Number input</li>
+            <li><strong>agDateCellEditor:</strong> Date picker</li>
+          </ul>
+        </div>
+
+        <div class="code-box">
+          <strong>Select Editor Example:</strong>
+          <pre ngNonBindable><code>{{
+headerName: 'Department',
+field: 'department',
+editable: true,
+cellEditor: 'agSelectCellEditor',
+cellEditorParams: {{
+  values: ['Engineering', 'Sales', 'Marketing', 'HR']
+}}
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Detecting Changes</h4>
+          <p>
+            Listen to <code>cellValueChanged</code> event to react when a cell is edited.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript:</strong>
+          <pre ngNonBindable><code>onCellValueChanged(event: any) {{
+  console.log('Old Value:', event.oldValue);
+  console.log('New Value:', event.newValue);
+  console.log('Row Data:', event.data);
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Programmatic Editing</h4>
+          <p>
+            Start and stop editing programmatically using the Grid API.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript:</strong>
+          <pre ngNonBindable><code>startEditing() {{
+  this.gridApi?.startEditingCell({{
+    rowIndex: 0,
+    colKey: 'name'
+  }});
+}}
+
+stopEditing() {{
+  this.gridApi?.stopEditing();
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Edit Types</h4>
+          <p>
+            Choose between <code>fullRow</code> and <code>singleCell</code> editing modes:
+          </p>
+          <ul>
+            <li><strong>singleCell:</strong> Edit one cell at a time</li>
+            <li><strong>fullRow:</strong> Edit entire row at once (default)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Best Practices -->
+      <div class="page-section">
+        <h3>Best Practices</h3>
+        <div class="success-alert">
+          <strong>✓ Validate input:</strong> Use valueParser to validate cell values before saving.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Save to backend:</strong> Persist changes to your API/database.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Show edit mode:</strong> Use cellStyle to highlight editable cells.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Limit editable columns:</strong> Only make necessary columns editable.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Use appropriate editors:</strong> Match editor to data type.
+        </div>
+      </div>
+    </div>
+
+    <!-- Side Panel -->
+    <div class="col-md-4">
+      <div class="card bg-light p-3 sticky-top" style="top: 100px;">
+        <h5 class="card-title" style="color: #1976d2;">Cell Editors</h5>
+
+        <div class="mb-2">
+          <strong class="d-block small" style="color: #1976d2;">Built-in Editors</strong>
+          <ul class="small mb-2">
+            <li>agTextCellEditor</li>
+            <li>agSelectCellEditor</li>
+            <li>agNumberCellEditor</li>
+            <li>agDateCellEditor</li>
+          </ul>
+        </div>
+
+        <div class="mb-2">
+          <strong class="d-block small" style="color: #1976d2;">Events</strong>
+          <ul class="small mb-2">
+            <li>cellValueChanged</li>
+            <li>cellEditingStarted</li>
+            <li>cellEditingStopped</li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <div class="info-alert">
+          <strong>Tip:</strong> Double-click to enter edit mode. Press Escape to cancel.
+        </div>
+
+        <div class="success-alert">
+          <strong>Pro Tip:</strong> Create custom cell editors for complex data types.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

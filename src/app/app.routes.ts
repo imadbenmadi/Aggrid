@@ -1,0 +1,30 @@
+import { Routes } from '@angular/router';
+import { HomeComponent } from './pages/home/home.component';
+import { BasicGridComponent } from './pages/basic-grid/basic-grid.component';
+import { ColumnsComponent } from './pages/columns/columns.component';
+import { DataBindingComponent } from './pages/data-binding/data-binding.component';
+import { SortingFilteringComponent } from './pages/sorting-filtering/sorting-filtering.component';
+import { PaginationComponent } from './pages/pagination/pagination.component';
+import { SelectionComponent } from './pages/selection/selection.component';
+import { EditingComponent } from './pages/editing/editing.component';
+import { GroupingComponent } from './pages/grouping/grouping.component';
+import { MasterDetailComponent } from './pages/master-detail/master-detail.component';
+import { EventsComponent } from './pages/events/events.component';
+import { CustomRenderersComponent } from './pages/custom-renderers/custom-renderers.component';
+import { ThemesComponent } from './pages/themes/themes.component';
+
+export const appRoutes: Routes = [
+  { path: '', component: HomeComponent },
+  { path: 'basic-grid', component: BasicGridComponent },
+  { path: 'columns', component: ColumnsComponent },
+  { path: 'data-binding', component: DataBindingComponent },
+  { path: 'sorting-filtering', component: SortingFilteringComponent },
+  { path: 'pagination', component: PaginationComponent },
+  { path: 'selection', component: SelectionComponent },
+  { path: 'editing', component: EditingComponent },
+  { path: 'grouping', component: GroupingComponent },
+  { path: 'master-detail', component: MasterDetailComponent },
+  { path: 'events', component: EventsComponent },
+  { path: 'custom-renderers', component: CustomRenderersComponent },
+  { path: 'themes', component: ThemesComponent }
+];

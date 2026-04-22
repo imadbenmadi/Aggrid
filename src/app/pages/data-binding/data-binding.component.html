@@ -1,0 +1,236 @@
+<div class="container-fluid mt-4">
+  <div class="page-section">
+    <h1>Data Binding & Updates</h1>
+    <p class="lead text-muted">Learn how to add, update, and manage grid data dynamically</p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <!-- Controls -->
+      <div class="controls-section">
+        <div class="row mb-3">
+          <div class="col-md-5">
+            <div class="control-group">
+              <label>Name</label>
+              <input type="text" [(ngModel)]="newName" placeholder="Enter name">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="control-group">
+              <label>Age</label>
+              <input type="number" [(ngModel)]="newAge" placeholder="Enter age">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="control-group">
+              <label>&nbsp;</label>
+              <button class="btn btn-primary btn-sm w-100" (click)="addNewRow()">Add Row</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-3">
+            <button class="btn btn-warning btn-sm w-100" (click)="updateAllData()">Mark Senior/Junior</button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-info btn-sm w-100" (click)="reloadData()">Reload Data</button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-secondary btn-sm w-100" (click)="clearData()">Clear All</button>
+          </div>
+          <div class="col-md-3">
+            <p class="small text-muted mb-0 mt-2">{{rowData?.length}} rows</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid -->
+      <div class="example-section">
+        <div class="example-title">Dynamic Data Management</div>
+        <div class="example-description">
+          Add rows, update existing data, and modify the grid in real-time. Try the buttons above!
+        </div>
+        <div class="grid-wrapper">
+          <ag-grid-angular class="ag-theme-alpine grid-container" [rowData]="rowData" [columnDefs]="columnDefs"
+            (gridReady)="onGridReady($event)">
+          </ag-grid-angular>
+        </div>
+      </div>
+
+      <!-- Explanation -->
+      <div class="page-section">
+        <h3>Data Binding Concepts</h3>
+
+        <div class="explanation-box">
+          <h4>One-Way Binding</h4>
+          <p>
+            Use property binding <code>[rowData]="rowData"</code> to pass data to the grid.
+            When you modify the array, Angular's change detection automatically updates the grid.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>HTML:</strong>
+          <pre ngNonBindable><code>&lt;ag-grid-angular [rowData]="rowData" /&gt;</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Adding New Rows</h4>
+          <p>
+            To add a new row, create a new object and add it to the rowData array.
+            Use immutable patterns to ensure Angular detects the change.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript:</strong>
+          <pre ngNonBindable><code>addNewRow() {{
+  const newRow = {{
+    id: newId,
+    name: this.newName,
+    age: this.newAge,
+    // ... other properties
+  }};
+
+  // Immutable update - creates new array reference
+  this.rowData = [...this.rowData, newRow];
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Updating Existing Rows</h4>
+          <p>
+            Map through the array to update specific rows. Always create a new array reference
+            so Angular's change detection recognizes the modification.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript:</strong>
+          <pre ngNonBindable><code>updateRow(id: number, updates: any) {{
+  this.rowData = this.rowData.map(row =>
+    row.id === id ? {{ ...row, ...updates }} : row
+  );
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Deleting Rows</h4>
+          <p>
+            Filter out rows to delete them. This creates a new array reference that triggers
+            the grid to re-render.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript:</strong>
+          <pre ngNonBindable><code>deleteRow(id: number) {{
+  this.rowData = this.rowData.filter(row => row.id !== id);
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Replacing All Data</h4>
+          <p>
+            Sometimes you need to reload all data from a server. Simply assign the new array
+            to trigger a full grid refresh.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript:</strong>
+          <pre ngNonBindable><code>async reloadData() {{
+  const newData = await this.apiService.fetchData();
+  this.rowData = newData;
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Immutability Pattern</h4>
+          <p>
+            Always create new array references when modifying data. This is crucial for
+            Angular's change detection and performance optimization strategies.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>Good (Immutable):</strong>
+          <pre ngNonBindable><code>this.rowData = [...this.rowData, newRow];
+this.rowData = this.rowData.map(...);
+this.rowData = this.rowData.filter(...);</code></pre>
+        </div>
+
+        <div class="code-box">
+          <strong>Bad (Mutable):</strong>
+          <pre ngNonBindable><code>this.rowData.push(newRow);  // Don't do this!
+this.rowData[0].name = 'New';  // Don't do this!</code></pre>
+        </div>
+      </div>
+
+      <!-- Best Practices -->
+      <div class="page-section">
+        <h3>Best Practices</h3>
+        <div class="success-alert">
+          <strong>✓ Use immutable patterns:</strong> Always create new array references when modifying data.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Batch updates:</strong> Update multiple rows at once instead of one at a time.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Optimize large updates:</strong> Use grid API methods for better performance with large datasets.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Handle async operations:</strong> Use async/await or RxJS for API calls.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Validate data:</strong> Always validate before adding or updating rows.
+        </div>
+      </div>
+    </div>
+
+    <!-- Side Panel -->
+    <div class="col-md-4">
+      <div class="card bg-light p-3 sticky-top" style="top: 100px;">
+        <h5 class="card-title" style="color: #1976d2;">Data Operations</h5>
+
+        <div class="mb-3">
+          <strong class="text-primary">Add Row</strong>
+          <p class="small text-muted mb-0">Append new data to the array</p>
+        </div>
+
+        <div class="mb-3">
+          <strong class="text-primary">Update Row</strong>
+          <p class="small text-muted mb-0">Modify existing row properties</p>
+        </div>
+
+        <div class="mb-3">
+          <strong class="text-primary">Delete Row</strong>
+          <p class="small text-muted mb-0">Remove rows from the grid</p>
+        </div>
+
+        <div class="mb-3">
+          <strong class="text-primary">Batch Update</strong>
+          <p class="small text-muted mb-0">Modify multiple rows at once</p>
+        </div>
+
+        <div class="mb-3">
+          <strong class="text-primary">Replace All</strong>
+          <p class="small text-muted mb-0">Load entirely new dataset</p>
+        </div>
+
+        <hr>
+
+        <div class="info-alert">
+          <strong>Important:</strong> Always use immutable patterns. Create new array references so Angular detects
+          changes.
+        </div>
+
+        <div class="success-alert">
+          <strong>Tip:</strong> For performance with large datasets, consider using the Grid API methods instead of
+          direct array manipulation.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

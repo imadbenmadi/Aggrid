@@ -1,0 +1,219 @@
+<div class="container-fluid mt-4">
+  <div class="page-section">
+    <h1>Columns & Cell Rendering</h1>
+    <p class="lead text-muted">Master column definitions and customize cell appearance</p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <!-- Controls -->
+      <div class="controls-section">
+        <div class="row">
+          <div class="col-md-6">
+            <button class="btn btn-primary btn-sm" (click)="autoSizeColumns()">Auto Size Columns</button>
+          </div>
+          <div class="col-md-6">
+            <button class="btn btn-secondary btn-sm" (click)="resetColumns()">Reset Columns</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid -->
+      <div class="example-section">
+        <div class="example-title">Advanced Column Configuration</div>
+        <div class="example-description">
+          This grid demonstrates various column properties including filtering, formatting, styling, and pinning.
+        </div>
+        <div class="grid-wrapper">
+          <ag-grid-angular class="ag-theme-alpine grid-container-tall" [rowData]="rowData" [columnDefs]="columnDefs"
+            (gridReady)="onGridReady($event)">
+          </ag-grid-angular>
+        </div>
+      </div>
+
+      <!-- Explanation -->
+      <div class="page-section">
+        <h3>Column Definition Properties</h3>
+
+        <div class="explanation-box">
+          <h4>Basic Properties</h4>
+          <ul>
+            <li><strong>field:</strong> The property name from your data object</li>
+            <li><strong>headerName:</strong> The text shown in the column header</li>
+            <li><strong>width:</strong> Column width in pixels</li>
+            <li><strong>hide:</strong> Boolean to show/hide the column</li>
+          </ul>
+        </div>
+
+        <div class="code-box">
+          <strong>Example:</strong>
+          <pre ngNonBindable><code>{{
+headerName: 'Name',
+field: 'name',
+width: 200,
+hide: false
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Pinning Columns</h4>
+          <p>
+            Use the <code>pinned</code> property to lock columns in place during horizontal scrolling.
+            Useful for ID columns or important reference fields.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>Example:</strong>
+          <pre ngNonBindable><code>{{
+headerName: 'ID',
+field: 'id',
+pinned: 'left',  // or 'right'
+width: 80
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Cell Styling</h4>
+          <p>
+            Use <code>cellStyle</code> to apply inline styles to cells. Can be a static object or a function
+            that receives the cell context and returns dynamic styles.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>Example:</strong>
+          <pre ngNonBindable><code>{{
+headerName: 'Status',
+field: 'status',
+cellStyle: params => ({{
+  'background-color': params.value === 'Active' ? '#d4edda' : '#f8d7da',
+  'text-align': 'center'
+}})
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Value Formatter</h4>
+          <p>
+            Format cell values for display without changing the underlying data.
+            Common for currency, dates, and percentages.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>Example:</strong>
+          <pre ngNonBindable><code>{{
+headerName: 'Salary',
+field: 'salary',
+valueFormatter: params => '$' + params.value?.toLocaleString()
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Column Filtering</h4>
+          <p>
+            Enable filtering with different filter types: <code>agTextColumnFilter</code>,
+            <code>agNumberColumnFilter</code>, <code>agDateColumnFilter</code>, or <code>agSetColumnFilter</code>.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>Example:</strong>
+          <pre ngNonBindable><code>{{
+headerName: 'Department',
+field: 'department',
+filter: 'agSetColumnFilter'  // Shows unique values
+}}</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Column Types</h4>
+          <p>
+            Use column types to apply preset configurations. Built-in types: <code>numericColumn</code>,
+            <code>rightAligned</code>, <code>dateColumn</code>. They set common properties automatically.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>Example:</strong>
+          <pre ngNonBindable><code>{{
+headerName: 'Age',
+field: 'age',
+type: 'numericColumn'  // Right-aligned, numeric filter
+}}</code></pre>
+        </div>
+      </div>
+
+      <!-- Best Practices -->
+      <div class="page-section">
+        <h3>Best Practices</h3>
+        <div class="success-alert">
+          <strong>✓ Use valueFormatter for display:</strong> Keep original data unchanged while showing formatted
+          values.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Pin important columns:</strong> Keep ID or reference columns visible during scrolling.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Match data types:</strong> Use appropriate filter types (numeric, text, date, set).
+        </div>
+        <div class="success-alert">
+          <strong>✓ Use column types:</strong> Leverage built-in types to avoid repetitive configuration.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Dynamic styling:</strong> Use functions for cellStyle to apply conditional formatting.
+        </div>
+      </div>
+    </div>
+
+    <!-- Side Panel -->
+    <div class="col-md-4">
+      <div class="card bg-light p-3 sticky-top" style="top: 100px;">
+        <h5 class="card-title" style="color: #1976d2;">Column Properties</h5>
+
+        <div class="mb-2">
+          <strong class="d-block small" style="color: #1976d2;">Core</strong>
+          <ul class="small mb-2">
+            <li>field</li>
+            <li>headerName</li>
+            <li>width</li>
+            <li>hide</li>
+          </ul>
+        </div>
+
+        <div class="mb-2">
+          <strong class="d-block small" style="color: #1976d2;">Layout</strong>
+          <ul class="small mb-2">
+            <li>pinned</li>
+            <li>lockPosition</li>
+            <li>suppressSizeToFit</li>
+          </ul>
+        </div>
+
+        <div class="mb-2">
+          <strong class="d-block small" style="color: #1976d2;">Filtering & Sorting</strong>
+          <ul class="small mb-2">
+            <li>filter</li>
+            <li>sortable</li>
+            <li>type</li>
+          </ul>
+        </div>
+
+        <div class="mb-2">
+          <strong class="d-block small" style="color: #1976d2;">Formatting</strong>
+          <ul class="small mb-2">
+            <li>valueFormatter</li>
+            <li>cellStyle</li>
+            <li>cellClass</li>
+          </ul>
+        </div>
+
+        <div class="info-alert">
+          <strong>Pro Tip:</strong> Use the Column API methods to dynamically update columns after the grid is
+          initialized.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

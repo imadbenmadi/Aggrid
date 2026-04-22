@@ -1,0 +1,134 @@
+<div class="container-fluid mt-4">
+  <div class="page-section">
+    <h1>Master/Detail Grid</h1>
+    <p class="lead text-muted">Display nested grids with hierarchical data</p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <!-- Explanation -->
+      <div class="example-section mb-3">
+        <div class="example-title">Master/Detail Implementation</div>
+        <div class="example-description">
+          Click the expand arrow (►) on any row to see related detail data in a
+          nested grid. Each employee shows their skills in a detail grid.
+        </div>
+      </div>
+
+      <!-- Grid -->
+      <div class="grid-wrapper" style="height: auto">
+        <ag-grid-angular class="ag-theme-alpine" style="height: 600px" [rowData]="rowData" [columnDefs]="columnDefs"
+          [masterDetail]="true" [detailRowHeight]="300" [detailCellRendererParams]="detailCellRendererParams"
+          (gridReady)="onGridReady($event)">
+        </ag-grid-angular>
+      </div>
+
+      <!-- Explanation -->
+      <div class="page-section mt-5">
+        <h3>Master/Detail Concepts</h3>
+
+        <div class="explanation-box">
+          <h4>Enabling Master/Detail</h4>
+          <p>
+            Set <code>[masterDetail]="true"</code> on the grid. Add an expand
+            column automatically. Use <code>detailRowHeight</code> to set height
+            of detail rows.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>HTML Template:</strong>
+          <pre ngNonBindable><code>&lt;ag-grid-angular
+  [masterDetail]="true"
+  [detailRowHeight]="300"
+        [detailCellRendererParams]="detailCellRendererParams"
+  ...
+&gt;
+&lt;/ag-grid-angular&gt;</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Detail Cell Renderer</h4>
+          <p>
+            Create a template reference for the detail view. This template is
+            rendered for each expanded row.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>HTML Template:</strong>
+          <pre ngNonBindable><code>&lt;ng-template #detailCellRenderer let-data&gt;
+  &lt;div&gt;
+    &lt;h5&gt;Details for {{ data.name }}&lt;/h5&gt;
+    &lt;p *ngFor="let item of data.details"&gt;
+      {{ item }}
+    &lt;/p&gt;
+  &lt;/div&gt;
+&lt;/ng-template&gt;</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Loading Detail Data</h4>
+          <p>
+            Use <code>getDetailRowData</code> to provide data to the detail
+            view. This function is called when a row is expanded.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>TypeScript:</strong>
+          <pre ngNonBindable><code>getDetailRowData = (params: any) => {{
+  // params.data contains the master row data
+  // params.successCallback passes data to detail view
+  params.successCallback(params.data.details);
+}};</code></pre>
+        </div>
+
+        <div class="explanation-box">
+          <h4>Alternative: Nested Grid</h4>
+          <p>
+            For more complex detail views, you can embed another AG Grid inside
+            the detail renderer.
+          </p>
+        </div>
+
+        <div class="code-box">
+          <strong>HTML Template:</strong>
+          <pre ngNonBindable><code>&lt;ng-template #detailCellRenderer let-data&gt;
+  &lt;ag-grid-angular
+    [rowData]="data.details"
+    [columnDefs]="detailColumnDefs"
+    ...
+  &gt;
+  &lt;/ag-grid-angular&gt;
+&lt;/ng-template&gt;</code></pre>
+        </div>
+      </div>
+
+      <!-- Best Practices -->
+      <div class="page-section">
+        <h3>Best Practices</h3>
+        <div class="success-alert">
+          <strong>✓ Load detail data on demand:</strong> Only fetch detail data
+          when a row is expanded.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Limit detail rows:</strong> Keep detail content reasonably
+          sized for performance.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Use nested grids carefully:</strong> Multiple nested grids
+          can impact performance.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Provide clear visual hierarchy:</strong> Use distinct
+          styling for detail sections.
+        </div>
+        <div class="success-alert">
+          <strong>✓ Handle async data:</strong> Use promises or observables to
+          load detail data.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
