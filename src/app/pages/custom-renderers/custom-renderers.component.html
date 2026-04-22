@@ -99,12 +99,12 @@ params.columnApi       // Column API</code></pre>
 
         <div class="code-box">
           <strong>Status Renderer Template:</strong>
-          <pre ngNonBindable><code>&lt;span [ngClass]="{
+          <pre ngNonBindable><code>&lt;span [ngClass]="&#123;
   'badge-success': status === 'Active',
   'badge-danger': status === 'Inactive',
   'badge-warning': status === 'Pending'
-}"&gt;
-  {{ status }}
+&#125;"&gt;
+  &#123;&#123; status &#125;&#125;
 &lt;/span&gt;</code></pre>
         </div>
 

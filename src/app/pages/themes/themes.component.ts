@@ -14,10 +14,9 @@ export class ThemesComponent {
   currentTheme: string = 'ag-theme-alpine';
   availableThemes = [
     { id: 'ag-theme-alpine', label: 'Alpine' },
-    { id: 'ag-theme-alpine-dark', label: 'Alpine Dark' },
-    { id: 'ag-theme-balham', label: 'Balham Theme' },
-    { id: 'ag-theme-balham-dark', label: 'Balham Dark' },
-    { id: 'ag-theme-material', label: 'Material Theme' },
+    { id: 'ag-theme-balham', label: 'Balham' },
+    { id: 'ag-theme-material', label: 'Material' },
+    { id: 'ag-theme-quartz', label: 'Quartz' },
   ];
 
   constructor() {
