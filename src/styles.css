@@ -26,3 +26,16 @@ html,
 body {
   height: 100%;
 }
+
+/* Shared AG Grid container sizing (must be global so grids render with height) */
+ag-grid-angular.grid-container {
+  display: block;
+  height: 400px;
+  width: 100%;
+}
+
+ag-grid-angular.grid-container-tall {
+  display: block;
+  height: 600px;
+  width: 100%;
+}
