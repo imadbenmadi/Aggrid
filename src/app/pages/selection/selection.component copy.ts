@@ -16,7 +16,7 @@ import {
   GridSizeChangedEvent,
   ValueFormatterParams,
   ValueGetterParams,
-  ICellRendererParams, StatusPanelDef, SideBarDef
+  ICellRendererParams,
 } from 'ag-grid-community';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
@@ -92,47 +92,6 @@ export class SelectionComponent implements OnInit, OnDestroy {
   //   comparator       → custom sort function for the column
   //   checkboxSelection       → renders a checkbox in the cell
   //   headerCheckboxSelection → renders a "select all" checkbox in the header
-
-  public statusBar: {
-    statusPanels: StatusPanelDef[];
-  } = {
-      statusPanels: [
-        { statusPanel: "agTotalRowCountComponent", align: "left" },
-        { statusPanel: "agFilteredRowCountComponent" },
-        { statusPanel: "agSelectedRowCountComponent" },
-        { statusPanel: "agAggregationComponent" },
-      ],
-    };
-
-  public sideBar: SideBarDef = {
-    toolPanels: [
-      {
-        id: 'columns',
-        labelDefault: 'Columns',
-        labelKey: 'columns',
-        iconKey: 'columns',
-        toolPanel: 'agColumnsToolPanel',
-        toolPanelParams: {
-          // This hides the Pivot Mode toggle and sections
-          suppressPivotMode: true,
-          // Optional: hide the "Row Groups" and "Values" sections too
-          suppressRowGroups: true,
-          suppressValues: true,
-          suppressColumnFilter: false,
-          suppressColumnSelectAll: false,
-          suppressColumnExpandAll: false,
-        },
-      },
-      {
-        id: 'filters',
-        labelDefault: 'Filters',
-        labelKey: 'filters',
-        iconKey: 'filter',
-        toolPanel: 'agFiltersToolPanel',
-      },
-    ],
-    defaultToolPanel: 'columns',
-  };
 
   public columnDefs: (ColDef | ColGroupDef)[] = [
 
@@ -225,8 +184,8 @@ export class SelectionComponent implements OnInit, OnDestroy {
           // Use sparingly; heavy renderers on large grids hurt scroll performance
           cellRenderer: (params: ICellRendererParams) =>
             params.value > 0
-              ? `<span style="color: black; font-weight: 600;">${params.value}</span>`
-              : `<span style="color: black;">0</span>`,
+              ? `<span style="color: goldenrod; font-weight: 600;">${params.value}</span>`
+              : `<span style="color: #ccc;">0</span>`,
         },
         {
           headerName: '🥈',
@@ -237,8 +196,8 @@ export class SelectionComponent implements OnInit, OnDestroy {
           width: 80,
           cellRenderer: (params: ICellRendererParams) =>
             params.value > 0
-              ? `<span style="color: black; font-weight: 600;">${params.value}</span>`
-              : `<span style="color:black;">0</span>`,
+              ? `<span style="color: #aaa; font-weight: 600;">${params.value}</span>`
+              : `<span style="color: #ccc;">0</span>`,
         },
         {
           headerName: '🥉',
@@ -249,8 +208,8 @@ export class SelectionComponent implements OnInit, OnDestroy {
           width: 80,
           cellRenderer: (params: ICellRendererParams) =>
             params.value > 0
-              ? `<span style="color: black; font-weight: 600;">${params.value}</span>`
-              : `<span style="color: black;">0</span>`,
+              ? `<span style="color: #cd7f32; font-weight: 600;">${params.value}</span>`
+              : `<span style="color: #ccc;">0</span>`,
         },
         {
           headerName: 'Total',
@@ -310,6 +269,13 @@ export class SelectionComponent implements OnInit, OnDestroy {
   // Pagination: splits rowData into pages
   public pagination = true;
   public paginationPageSize = 50;
+
+  // rowSelection: 'single' | 'multiple'
+  public rowSelection: 'multiple' | 'single' = 'multiple';
+
+  // suppressRowClickSelection: only checkboxes trigger selection, not row clicks
+  // Without this, clicking anywhere on a row selects it, which conflicts with editing
+  public suppressRowClickSelection = true;
 
   // animateRows: smooth row reordering on sort — disable on very large datasets
   public animateRows = true;
@@ -549,25 +515,4 @@ export class SelectionComponent implements OnInit, OnDestroy {
     return this.selectedRows.reduce((sum, row) => sum + (row.salary ?? 0), 0);
   }
 
-  public rowSelection: 'multiple' = 'multiple';
-  public suppressRowClickSelection = true;
-
-  onRowClicked(params: any): void {
-    const mouseEvent = params.event;
-
-    // Identify if the click was specifically on the checkbox element
-    const isCheckboxClick = mouseEvent.target.closest('.ag-selection-checkbox');
-
-    if (!isCheckboxClick) {
-      // SCENARIO: User clicked the ROW (not the checkbox)
-      // We want to ADD this row to the selection without removing others
-      params.node.setSelected(true, false);
-    } else {
-      // SCENARIO: User clicked the CHECKBOX
-      // If it's already selected, we want to UNSELECT it.
-      // Note: Since suppressRowClickSelection is true, we handle the toggle manually
-      const isSelected = params.node.isSelected();
-      params.node.setSelected(!isSelected);
-    }
-  }
 }

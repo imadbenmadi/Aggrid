@@ -27,3 +27,19 @@ pre {
     margin-right: 0.5rem;
   }
 }
+
+/* selection.component.scss */
+
+::ng-deep .ag-row-selected {
+  background-color: #ffcccc !important; /* Light red background */
+
+  /* Optional: Change background when hovering over a selected row */
+  &.ag-row-hover {
+    background-color: #fa5b5b !important;
+  }
+}
+
+/* If you want to change the color of the "Blue" selection bar often seen in Alpine theme */
+::ng-deep .ag-theme-alpine {
+  --ag-selected-row-background-color: #ffcccc;
+}

@@ -1,0 +1,202 @@
+<div class="container-fluid mt-4">
+    <div class="page-section">
+        <h1>Full Example: Professional AG Grid Showcase</h1>
+        <p class="lead text-muted">Complete demonstration of AG Grid features with real-world datasets</p>
+    </div>
+
+    <!-- Dataset Tabs -->
+    <ul class="nav nav-tabs mb-4" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" [class.active]="selectedDataset === 'olympic'" (click)="switchDataset('olympic')"
+                type="button" role="tab" aria-selected="true">
+                🏅 Olympic Winners
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" [class.active]="selectedDataset === 'cars'" (click)="switchDataset('cars')"
+                type="button" role="tab" aria-selected="false">
+                🚗 Car Data
+            </button>
+        </li>
+    </ul>
+
+    <!-- Olympic Winners Section -->
+    <div *ngIf="selectedDataset === 'olympic'" class="dataset-section">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-section">
+                    <h2>Olympic Winners Dataset</h2>
+                    <p>The most frequently used AG Grid dataset, containing athlete names, ages, countries, years,
+                        sports, and medal counts.</p>
+                </div>
+
+                <!-- Controls -->
+                <div class="controls-section">
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <strong class="d-block mb-2">Quick Actions:</strong>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <button class="btn btn-primary btn-sm w-100" (click)="filterOlympicByCountry('USA')">Filter:
+                                USA</button>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-primary btn-sm w-100"
+                                (click)="filterOlympicByCountry('China')">Filter: China</button>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-info btn-sm w-100" (click)="sortOlympicByGoldDesc()">Sort by Gold
+                                ↓</button>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-warning btn-sm w-100" (click)="clearOlympicFilters()">Clear
+                                All</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Olympic Grid -->
+                <div class="example-section">
+                    <div class="example-title">Olympic Athletes Performance Grid</div>
+                    <div class="example-description">
+                        Sort by any column, filter by country or sport, or use the quick actions above. This grid loads
+                        data from an external HTTP endpoint.
+                    </div>
+                    <div class="grid-wrapper">
+                        <ag-grid-angular class="ag-theme-alpine grid-container-tall" [rowData]="olympicRowData$ | async"
+                            [columnDefs]="olympicColumnDefs" [defaultColDef]="defaultColDef"
+                            (gridReady)="onOlympicGridReady($event)">
+                        </ag-grid-angular>
+                    </div>
+                </div>
+
+                <!-- Features Showcase -->
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="info-alert">
+                            <strong>✓ Features Demonstrated:</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>Multiple filter types (text, numeric)</li>
+                                <li>Column sorting</li>
+                                <li>HTTP data loading with RxJS</li>
+                                <li>BehaviorSubject for reactive updates</li>
+                                <li>Column resizing & flex layout</li>
+                                <li>Large dataset handling</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="success-alert">
+                            <strong>💡 Best Practices:</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>Always provide type definitions for data</li>
+                                <li>Use BehaviorSubject for reactive data binding</li>
+                                <li>Implement error handling for HTTP calls</li>
+                                <li>Use the async pipe for subscriptions</li>
+                                <li>Configure defaultColDef for consistency</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Car Data Section -->
+    <div *ngIf="selectedDataset === 'cars'" class="dataset-section">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-section">
+                    <h2>Car Manufacturers Dataset</h2>
+                    <p>A smaller dataset perfect for quick start guides, showcasing car makes, models, and prices with
+                        professional formatting.</p>
+                </div>
+
+                <!-- Controls -->
+                <div class="controls-section">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <button class="btn btn-info btn-sm w-100" (click)="sortCarByPrice()">Sort by Price
+                                ↑</button>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-warning btn-sm w-100" (click)="clearCarFilters()">Clear All</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Car Grid -->
+                <div class="example-section">
+                    <div class="example-title">Car Inventory Grid</div>
+                    <div class="example-description">
+                        A compact grid demonstrating value formatting (currency), basic filtering, and sorting on
+                        smaller datasets.
+                    </div>
+                    <div class="grid-wrapper">
+                        <ag-grid-angular class="ag-theme-alpine grid-container" [rowData]="carRowData$ | async"
+                            [columnDefs]="carColumnDefs" [defaultColDef]="defaultColDef"
+                            (gridReady)="onCarGridReady($event)">
+                        </ag-grid-angular>
+                    </div>
+                </div>
+
+                <!-- Code Example -->
+                <div class="page-section mt-4">
+                    <h3>Value Formatter Example</h3>
+                    <div class="code-box">
+                        <strong>TypeScript:</strong>
+                        <pre ngNonBindable><code>columnDefs: ColDef[] = [
+  {{
+    headerName: 'Price',
+    field: 'price',
+    valueFormatter: (params: any) => '$' + params.value?.toLocaleString()
+  }}
+];</code></pre>
+                    </div>
+                </div>
+
+                <!-- Features -->
+                <div class="info-alert mt-4">
+                    <strong>✓ Features Demonstrated:</strong>
+                    <ul class="mb-0 mt-2">
+                        <li>Value formatting (currency display)</li>
+                        <li>Small dataset performance</li>
+                        <li>Numeric column type</li>
+                        <li>Default column definition reuse</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- General Best Practices -->
+    <div class="page-section mt-5">
+        <h2>General Best Practices</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="success-alert">
+                    <strong>✓ Data Management:</strong>
+                    <ul class="mb-0 mt-2">
+                        <li>Use RxJS Observables for data streams</li>
+                        <li>Implement proper error handling</li>
+                        <li>Load large datasets asynchronously</li>
+                        <li>Cache frequently accessed data</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="success-alert">
+                    <strong>✓ Performance:</strong>
+                    <ul class="mb-0 mt-2">
+                        <li>Virtual scrolling for large rows</li>
+                        <li>Column definitions outside render</li>
+                        <li>Use defaultColDef to reduce repetition</li>
+                        <li>Implement pagination for massive datasets</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

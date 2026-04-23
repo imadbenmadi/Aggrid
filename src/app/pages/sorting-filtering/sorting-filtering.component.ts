@@ -1,177 +1,126 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { ColDef, GridReadyEvent } from 'ag-grid-community';
+
+// 1. Interface moved outside the class
+export interface Datatyping {
+  id: number;
+  name: string;
+  age: number;
+  department: string;
+  salary: number;
+  status: string;
+}
 
 @Component({
   selector: 'app-sorting-filtering',
   templateUrl: './sorting-filtering.component.html',
   styleUrls: ['./sorting-filtering.component.scss'],
 })
-export class SortingFilteringComponent {
-  gridApi: any;
-  gridColumnApi: any;
-  rowData: any[] = [];
-  columnDefs: any[] = [];
+export class SortingFilteringComponent implements OnInit {
+  private gridApi: any;
 
-  constructor() {
+  // 2. Use any[] if the API response is unpredictable
+  public rowData$ = new BehaviorSubject<any[]>([]);
+  public columnDefs: ColDef[] = [];
+
+  constructor(private http: HttpClient) { }
+
+  ngOnInit(): void {
     this.initializeGrid();
+    this.fetchData();
   }
-
+  defaultColDef : ColDef = {
+    flex: 1,
+    minWidth: 100,
+    resizable: true
+  }
   initializeGrid() {
     this.columnDefs = [
       {
         headerName: 'Name',
-        field: 'name',
-        width: 150,
-        sortable: true,
-        filter: 'agTextColumnFilter',
+        field: 'athlete', // Changed from 'name' to 'athlete'
+        width: 150
       },
       {
         headerName: 'Age',
         field: 'age',
-        width: 100,
-        sortable: true,
-        filter: 'agNumberColumnFilter',
-        type: 'numericColumn',
+        width: 100
       },
       {
-        headerName: 'Department',
-        field: 'department',
-        width: 150,
-        sortable: true,
-        filter: 'agSetColumnFilter',
+        headerName: 'Sport',
+        field: 'sport', // Changed from 'department' to 'sport'
+        width: 150
       },
       {
-        headerName: 'Salary',
-        field: 'salary',
-        width: 130,
-        type: 'numericColumn',
-        sortable: true,
-        filter: 'agNumberColumnFilter',
-        valueFormatter: (params: any) => '$' + params.value?.toLocaleString(),
-      },
-      {
-        headerName: 'Status',
-        field: 'status',
-        width: 120,
-        sortable: true,
-        filter: 'agSetColumnFilter',
-      },
+        headerName: 'Total Medals',
+        field: 'total', // Changed from 'salary' to 'total'
+        width: 130
+      }
     ];
+    // this.columnDefs = [
 
-    this.rowData = [
-      {
-        name: 'Alice Johnson',
-        age: 28,
-        department: 'Engineering',
-        salary: 95000,
-        status: 'Active',
-      },
-      {
-        name: 'Bob Smith',
-        age: 35,
-        department: 'Sales',
-        salary: 75000,
-        status: 'Active',
-      },
-      {
-        name: 'Carol Williams',
-        age: 32,
-        department: 'Marketing',
-        salary: 70000,
-        status: 'Inactive',
-      },
-      {
-        name: 'David Brown',
-        age: 29,
-        department: 'Engineering',
-        salary: 88000,
-        status: 'Active',
-      },
-      {
-        name: 'Emma Davis',
-        age: 31,
-        department: 'HR',
-        salary: 65000,
-        status: 'Active',
-      },
-      {
-        name: 'Frank Miller',
-        age: 40,
-        department: 'Management',
-        salary: 110000,
-        status: 'Active',
-      },
-      {
-        name: 'Grace Taylor',
-        age: 27,
-        department: 'Engineering',
-        salary: 92000,
-        status: 'Active',
-      },
-      {
-        name: 'Henry Anderson',
-        age: 38,
-        department: 'Sales',
-        salary: 78000,
-        status: 'Inactive',
-      },
-      {
-        name: 'Ivy Thomas',
-        age: 26,
-        department: 'Engineering',
-        salary: 85000,
-        status: 'Active',
-      },
-      {
-        name: 'Jack Jackson',
-        age: 33,
-        department: 'Finance',
-        salary: 82000,
-        status: 'Active',
-      },
-    ];
+    //   { headerName: 'Name', field: 'name', width: 150, sortable: true, filter: 'agTextColumnFilter' },
+    //   { headerName: 'Age', field: 'age', width: 100, sortable: true, filter: 'agNumberColumnFilter' },
+    //   { headerName: 'Department', field: 'department', width: 150, sortable: true, filter: 'agTextColumnFilter' },
+    //   {
+    //     headerName: 'Salary',
+    //     field: 'salary',
+    //     width: 130,
+    //     sortable: true,
+    //     filter: 'agNumberColumnFilter',
+    //     valueFormatter: (params) => params.value ? '$' + params.value.toLocaleString() : ''
+    //   },
+    //   { headerName: 'Status', field: 'status', width: 120, sortable: true, filter: 'agTextColumnFilter' },
+    // ];
   }
 
-  onGridReady(params: any) {
+  fetchData() {
+    // 3. Since we use BehaviorSubject, we .subscribe() and then .next() the results
+    this.http.get<any[]>('https://www.ag-grid.com/example-assets/olympic-winners.json')
+      .subscribe({
+        next: (data) => this.rowData$.next(data),
+        error: (err) => console.error('Failed to fetch data', err)
+      });
+  }
+
+  onGridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
-    this.gridColumnApi = params.columnApi;
   }
+
+  // --- Grid Controls ---
 
   clearFilters() {
     this.gridApi?.setFilterModel(null);
   }
-
-  sortBySalaryDesc() {
-    this.gridColumnApi?.getColumn('salary')?.setSort('desc');
-  }
-
-  sortByAgeAsc() {
-    this.gridColumnApi?.getColumn('age')?.setSort('asc');
-  }
-
   clearSort() {
-    this.gridColumnApi?.applyColumnState({
+    this.gridApi?.applyColumnState({
+      state: [],
+      defaultState: { sort: null },
+    });
+  }
+  sortByAgeAsc() {
+    this.gridApi?.applyColumnState({
+      state: [{ colId: 'age', sort: 'asc' }],
+      defaultState: { sort: null },
+    });
+  }
+  filterHighSalary() {
+    this.gridApi?.setFilterModel({
+      salary: { filterType: 'number', type: 'greaterThan', filter: 50000 },
+    });
+  }
+  sortBySalaryDesc() {
+    this.gridApi?.applyColumnState({
+      state: [{ colId: 'salary', sort: 'desc' }],
       defaultState: { sort: null },
     });
   }
 
   filterEngineering() {
-    const filterModel = {
-      department: {
-        filterType: 'set',
-        values: ['Engineering'],
-      },
-    };
-    this.gridApi?.setFilterModel(filterModel);
-  }
-
-  filterHighSalary() {
-    const filterModel = {
-      salary: {
-        filterType: 'number',
-        type: 'greaterThan',
-        filter: 80000,
-      },
-    };
-    this.gridApi?.setFilterModel(filterModel);
+    this.gridApi?.setFilterModel({
+      department: { filterType: 'text', type: 'contains', filter: 'Engineering' },
+    });
   }
 }

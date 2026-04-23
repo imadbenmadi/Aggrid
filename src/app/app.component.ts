@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -8,10 +7,11 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'AG Grid Learning Platform';
 
-  constructor() {}
+  constructor() { }
 
   navItems = [
     { label: 'Home', route: '/' },
+    { label: 'Full Example', route: '/full-example' },
     { label: 'Basic Grid', route: '/basic-grid' },
     { label: 'Columns', route: '/columns' },
     { label: 'Data Binding', route: '/data-binding' },

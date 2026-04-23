@@ -12,6 +12,7 @@ import { MasterDetailComponent } from './pages/master-detail/master-detail.compo
 import { EventsComponent } from './pages/events/events.component';
 import { CustomRenderersComponent } from './pages/custom-renderers/custom-renderers.component';
 import { ThemesComponent } from './pages/themes/themes.component';
+import { FullExampleComponent } from './pages/full-example/full-example.component';
 
 export const appRoutes: Routes = [
   { path: '', component: HomeComponent },
@@ -26,5 +27,6 @@ export const appRoutes: Routes = [
   { path: 'master-detail', component: MasterDetailComponent },
   { path: 'events', component: EventsComponent },
   { path: 'custom-renderers', component: CustomRenderersComponent },
-  { path: 'themes', component: ThemesComponent }
+  { path: 'themes', component: ThemesComponent },
+  { path: 'full-example', component: FullExampleComponent }
 ];
